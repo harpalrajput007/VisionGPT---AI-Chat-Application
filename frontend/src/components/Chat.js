@@ -20,7 +20,7 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { ColorModeContext } from '../context/ColorModeContext';
-import axios from 'axios';
+import { api } from '../api';
 
 const CodeBlock = ({ code, language }) => {
     const handleCopy = async () => {
@@ -245,7 +245,7 @@ const Chat = () => {
 
     const fetchChats = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/chats', {
+            const response = await api.get('/api/chats', {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setChats(response.data);
@@ -270,7 +270,7 @@ const Chat = () => {
             }]);
             
             // Optionally create a new chat on the server (commented out to avoid server call until first message)
-            // const response = await axios.post('http://localhost:5000/api/chats/new', {}, {
+            // const response = await api.post('/api/chats/new', {}, {
             //     headers: { Authorization: `Bearer ${user.token}` }
             // });
             // setCurrentChatId(response.data._id);
@@ -282,7 +282,7 @@ const Chat = () => {
 
     const selectChat = async (chatId) => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/chats/${chatId}`, {
+            const response = await api.get(`/api/chats/${chatId}`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setCurrentChatId(chatId);
@@ -295,7 +295,7 @@ const Chat = () => {
     const handleDeleteChat = async (chatId, event) => {
         event.stopPropagation(); // Prevent chat selection when clicking delete
         try {
-            await axios.delete(`http://localhost:5000/api/chats/${chatId}`, {
+            await api.delete(`/api/chats/${chatId}`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             
@@ -329,7 +329,7 @@ const Chat = () => {
             
             // If this is a new chat, create it first
             if (isNewChat) {
-                const newChatResponse = await axios.post('http://localhost:5000/api/chats/new', {}, {
+                const newChatResponse = await api.post('/api/chats/new', {}, {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
                 chatId = newChatResponse.data._id;
@@ -337,8 +337,8 @@ const Chat = () => {
             }
 
             // Send the message
-            const response = await axios.post(
-                `http://localhost:5000/api/chats/${chatId}/messages`,
+            const response = await api.post(
+                `/api/chats/${chatId}/messages`,
                 { message: messageText },
                 {
                     headers: {

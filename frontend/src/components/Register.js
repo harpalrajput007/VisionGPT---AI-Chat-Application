@@ -16,7 +16,7 @@ import {
 import { Visibility, VisibilityOff, Email, Lock, Person } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../api';
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -49,7 +49,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', {
+            const response = await api.post('/api/auth/register', {
                 username,
                 email,
                 password
